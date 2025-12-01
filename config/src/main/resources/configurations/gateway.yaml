@@ -1,0 +1,38 @@
+eureka:
+  client:
+    register-with-eureka: false
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: reviewservice
+          uri: lb://REVIEWSERVICE
+          predicates:
+            - Path=/api/v1/reviews/**
+        - id: reposervice
+          uri: lb://REPOSERVICE
+          predicates:
+            - Path=/api/v1/repositories/**
+management:
+  endpoints:
+    gateway:
+      enabled: true
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route: TRACE
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: TRACE
+    org.springframework.cloud.netflix.eureka: TRACE
+    com.netflix.discovery: TRACE
+    org.springframework.cloud.loadbalancer: TRACE
+    root: TRACE
